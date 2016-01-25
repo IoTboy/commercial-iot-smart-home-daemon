@@ -1,0 +1,21 @@
+{
+  "name": "commercial-iot-smart-home-daemon",
+  "version": "1.0.0",
+  "description": "Main server program that communicates with various sensors",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "iot",
+    "smarthome",
+    "zigbee",
+    "hue",
+    "lux"
+  ],
+  "author": "Kona",
+  "license": "MIT",
+  "dependencies": {
+    "commercial-zigbee-device-daemon": "^1.0.0"
+  }
+}
