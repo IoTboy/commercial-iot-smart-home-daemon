@@ -31,59 +31,54 @@ console.log(temp.name());
 // equivalent Fahrenheit temperature, waiting one second between readings
 var i = 0;
 var waiting = setInterval(function() {
-        var celsius = temp.value();
-        var fahrenheit = celsius * 9.0/5.0 + 32.0;
-        console.log(celsius + " degrees Celsius, or " +
-            Math.round(fahrenheit) + " degrees Fahrenheit");
-        i++;
-	if(fahrenheit > 80) {
-	  console.log('Buzzer ON');
-	  myBuzzer.playSound(upmBuzzer.DO, 1000000);
-	}
-//        if (i == 10) clearInterval(waiting);
-        }, 1000);
+  var celsius = temp.value();
+  var fahrenheit = celsius * 9.0/5.0 + 32.0;
+  console.log(celsius + " degrees Celsius, or " +
+  Math.round(fahrenheit) + " degrees Fahrenheit");
+  i++;
+  if(fahrenheit > 80) {
+    console.log('Buzzer ON');
+    myBuzzer.playSound(upmBuzzer.DO, 1000000);
+  }
+  //        if (i == 10) clearInterval(waiting);
+}, 1000);
 
 periodicActivity(); //call the periodicActivity function
 
 function periodicActivity() //
 {
   var motionDetected =  myDigitalPin.read(); //read the digital value of the pin
-  console.log('Gpio is ' + motionDetected); //write the read value out to the co
+  // console.log('motionDetected is ' + motionDetected); //write the read value out to the co
   var luxValue = light.value() * 10;
-//  console.log('Light Raw Value: ' + light.raw_value());
-  console.log('Lux Value: ' + luxValue);
+  // console.log('Lux Value: ' + luxValue);
   var intensity =  0.254 * ( 1000 - luxValue);
   var reqdBrightness = utils.float2int(intensity);
-  console.log('Required Brightness: ' + reqdBrightness);
-//  if(luxValue < 25)
-    zigbee.changeBrightness(reqdBrightness);    
+  // console.log('Required Brightness: ' + reqdBrightness);
+  //  if(luxValue < 25)
+  zigbee.changeBrightness(zigbee.levelControlCluster_HueLivingRoom, reqdBrightness);
   if(motionDetected)
-    interval = 2000;
+  interval = 10000;
   else
-    interval = 500;
-  //zigbee.setPower(motionDetected);
-  
+  interval = 2000;
+  zigbee.setPower(zigbee.onOffCluster_HueBathRoom, motionDetected);
+
   setTimeout(periodicActivity, interval); //call the indicated function after 1 secon
 }
 
 // Print message when exiting
 process.on('SIGINT', function()
 {
-	console.log("Exiting...");
-	process.exit(0);
+  console.log("Exiting...");
+  process.exit(0);
 });
 
 return;
 var zigbee = new zigbeeDevice(config);
 zigbee.init();
 setInterval(function() {
-
-        zigbee.setColor(zigbee.colorCluster_HueLivingRoom, '#0000FF');
-
+  zigbee.setColor(zigbee.colorCluster_HueLivingRoom, '#0000FF');
 }, 10000);
 
 setInterval(function() {
-
-	zigbee.setColor(zigbee.colorCluster_HueLivingRoom, '#FF0000');
+  zigbee.setColor(zigbee.colorCluster_HueLivingRoom, '#FF0000');
 }, 15000);
-
